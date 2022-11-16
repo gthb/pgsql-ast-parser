@@ -34,21 +34,11 @@ module.exports = {
         rules: [
             {
                 test: /\.ts$/,
-                loader: 'ts-loader',
-                options: {
-                    transpileOnly: mode === 'development',
-                },
+                use: [
+                    ...isCoverage ? [ "@jsdevtools/coverage-istanbul-loader" ] : [],
+                    { loader: "ts-loader", options: { transpileOnly: mode === 'development' } },
+                ],
             },
-            ...isCoverage ? [
-                {
-                    test: /\.ts$/,
-                    exclude: /\.spec\.ts$/,
-                    enforce: 'post',
-                    use: {
-                        loader: 'istanbul-instrumenter-loader',
-                        options: { esModules: true }
-                    }
-                }] : [],
             // {
             //     test: /\.pegjs$/,
             //     loader: 'pegjs-loader'
